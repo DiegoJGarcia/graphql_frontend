@@ -1,15 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-    </div>
-  );
-}
+import apolloCli from './lib/apollo';
+import { gql } from 'apollo-boost';
+
+const App = () => {
+  apolloCli
+    .query({
+      query: gql`
+        {
+          rates(currency: "USD") {
+            currency
+          }
+        }
+      `,
+    })
+    .then(result => console.log('result', result));
+};
 
 export default App;
