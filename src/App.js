@@ -1,20 +1,41 @@
+import React from 'react';
 import './App.css';
 
-import apolloCli from './lib/apollo';
+import { Query } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
 const App = () => {
-  apolloCli
-    .query({
-      query: gql`
+  const ExchangeRates = () => (
+    <Query
+      query={gql`
         {
           rates(currency: "USD") {
             currency
+            rate
           }
         }
-      `,
-    })
-    .then(result => console.log('result', result));
+      `}
+    >
+      {({ loading, error, data }) => {
+        if (loading) return <p>Loading...</p>;
+        if (error) return <p>Error :(</p>;
+
+        return data.rates.map(({ currency, rate }) => (
+          <div key={currency}>
+            <p>
+              {currency}: {rate}
+            </p>
+          </div>
+        ));
+      }}
+    </Query>
+  );
+  return (
+    <div className="App">
+      <h1>GRAPHQL FRONTEND</h1>
+      <ExchangeRates />
+    </div>
+  );
 };
 
 export default App;
